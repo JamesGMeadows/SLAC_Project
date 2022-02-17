@@ -1,5 +1,5 @@
 # RWM_Database
-Version 1.0 of the RWM Database
+Version 1.0 of the RWM Database. Demonstration of website available in Power Point (JamesMeadows_SLAC_PPT.pdf) and report (SULI_FINAL_PAPER.pdf) formats.
 
 ## Specifications
 * Web Forms / Database App
