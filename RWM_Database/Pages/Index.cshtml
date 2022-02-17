@@ -1,0 +1,131 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+
+<link rel="stylesheet" href="~/css/create_form.css">
+
+
+<form class="form" method="post" id="create_form">
+
+    <header>Generate Report</header>
+    <div class="information-container" id="styled_form">
+
+        <label for="ReportType">Report Type:</label>
+        <select id="ReportType" name="ReportType">
+            <option value="0">Items Declared Between</option>
+            <option value="1">Items Hazardous</option>
+        </select>
+
+        <label for="StartDate">Start Date:</label>
+        <input type="date" id="StartDate" name="StartDate" required>
+
+        <label for="EndDate">End Date:</label>
+        <input type="date" id="EndDate" name="EndDate" required>
+
+    </div>
+
+    <input type="submit" value="Generate Report" asp-page-handler="ViewButton" />
+</form>
+
+
+<form class="form" method="post" id="create_form">
+
+    <header>Export Database</header>
+    <div class="information-container" id="styled_form">
+
+        <label for="ReportType">Report Type:</label>
+        <select id="ReportType" name="ReportType">
+            <option value="0">Full Database Export</option>
+        </select>
+
+    </div>
+
+    <input type="submit" value="Export Database" asp-page-handler="ExportButton" />
+</form>
+
+
+
+<link rel="stylesheet" href="~/css/view_item.css">
+<div id="styled_item">
+    @{
+
+
+        var ContainerHandler = Model.ContainerHandler;
+        var emptyContainers = ContainerHandler.CountEmptyContainers();
+        var filledContainers = ContainerHandler.CountFilledContainers();
+        var inProgess = ContainerHandler.CountInProgessContainers();
+        var overCapacityContainers = ContainerHandler.CountOvercapacityContainers();
+
+
+        <header>Items Summary </header>
+
+        <div class="information-container" id="styled_item">
+            <label>Number Of Items Total:</label>
+            <p>@Model.ItemReport.CountTotalItems()</p>
+
+            <label>Number Of Items Shipped:</label>
+            <p>0</p>
+
+            <label>Number Of Items Hazardous:</label>
+            <p>@Model.ItemReport.CountHazardousItems()</p>
+
+        </div>
+
+        <header>Container Summary </header>
+
+        <div class="information-container" id="styled_item">
+            <label>Empty Containers:</label>
+            <p>@emptyContainers</p>
+
+            <label>In Progess Containers:</label>
+            <p>@filledContainers</p>
+
+            <label>Filled Containers:</label>
+            <p>@inProgess</p>
+
+            <label>Overcapacity Containers:</label>
+            <p>@overCapacityContainers</p>
+
+        </div>
+
+        <header>Shipment Summary </header>
+
+        <div class="information-container" id="styled_item">
+            <label>Number of Shipments Total:</label>
+            <p>0</p>
+
+            <label>Shipments by Fiscal Year:</label>
+            <p>0</p>
+
+        </div>
+
+        <header>Burial Summary </header>
+
+        <div class="information-container" id="styled_item">
+            <label>Burials By Fiscal Year:</label>
+            <p>0</p>
+
+            <label>Shipments by Fiscal Year:</label>
+            <p>0</p>
+
+        </div>
+
+        <header>Fiscal Year Summary </header>
+
+        <div class="information-container" id="styled_item">
+            <label>LLRW Shipped:</label>
+            <p>0</p>
+
+            <label>LLMW Shipped:</label>
+            <p>0</p>
+
+        </div>
+    }
+
+</div>
+
+
+

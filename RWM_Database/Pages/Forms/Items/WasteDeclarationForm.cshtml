@@ -1,0 +1,93 @@
+﻿@page
+@model RWM_Database.Pages.Forms.WasteDeclarationFormModel
+@{
+    ViewData["Title"] = "WasteDeclarationForm";
+}
+
+<link rel="stylesheet" href="~/css/create_form.css">
+<form class="form" method="post" id="create_form">
+
+    <header>Search By Field</header>
+    <div class="information-container" id="styled_form">
+
+        <label for="SearchDeclaration">Declaration Number:</label>
+        <input type="text" id="SearchDeclaration" name="SearchDeclaration" />
+
+
+        <label for="SearchContainer">Container Number:</label>
+        <input type="text" id="SearchContainer" name="SearchContainer">
+    </div>
+
+    <input type="submit" value="Search" asp-page-handler="SearchButton" />
+
+    <input type="submit" value="Clear" asp-page-handler="ClearButton" />
+</form>
+
+<br />
+
+<b>Items Found: @Model.ItemHandler.ItemList.Count</b>
+
+<link rel="stylesheet" href="~/css/table.css">
+<table id="styled_table">
+    <tr>
+        <th>Declaration Number</th>
+        <th>Container Number</th>
+        <th>Description</th>
+        <th>Location</th>
+        <th>Hazardous Material</th>
+    </tr>
+
+    @{
+        int start = (Model.CurrentPage - 1) * Model.PaginatedTable.PageSize;
+        if (start < 0)
+        {
+            start = 0;
+        }
+        for (int i = start; i < start + Model.PaginatedTable.PageSize; i++)
+        {
+            if (i >= Model.ItemHandler.ItemList.Count)
+            {
+                break;
+            }
+            var element = Model.ItemHandler.ItemList[i];
+
+            var itemId = element.ItemId;
+            var declarationNumber = element.DeclarationNumber;
+            var containerNumber = element.ContainerNumber;
+            var containerId = element.ContainerId;
+
+            var description = element.ItemDescription;
+            var location = element.Location;
+            var hazardousMaterial = element.HarzardousMaterial ? "Yes" : "No";
+
+            <tr>
+                <td><a href="/Forms/Items/PreviewWasteDeclarationForm?ItemId=@itemId">@Html.DisplayFor(m => declarationNumber)</a></td>
+                <td><a href="/Forms/Container/ViewContainer?ContainerId=@containerId">@Html.DisplayFor(m => containerNumber)</a></td>
+                <td>@Html.DisplayFor(m => description)</td>
+                <td>@Html.DisplayFor(m => location)</td>
+                <td>@hazardousMaterial</td>
+            </tr>
+        }
+    }
+
+</table>
+
+<div>
+    <ul class="pagination">
+        @for (var i = 1; i <= Model.PaginatedTable.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a href="/Forms/Items/WasteDeclarationForm?CurrentPage=@i@Model.ItemHandler.Search.GetURLSearch()" class="page-link">@i</a>
+            </li>
+        }
+    </ul>
+</div>
+
+<br />
+
+<link rel="stylesheet" href="~/css/create_form.css">
+<form class="form" method="post" id="create_form">
+    <input type="submit" value="Create Item" asp-page-handler="CreateButton" />
+</form>
+
+

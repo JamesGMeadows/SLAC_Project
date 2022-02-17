@@ -1,0 +1,16 @@
+﻿#upload_button {
+    color: gray;
+    background-color: white;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: bold;
+}
+    #upload_button input[type=submit] {
+        color: black;
+        background-color: lightgray;
+        padding: 4px;
+        border-radius: 0px;
+        border: 2px solid #124d77;
+    }
+

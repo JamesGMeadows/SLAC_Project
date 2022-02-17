@@ -1,0 +1,173 @@
+﻿@page
+@model RWM_Database.Pages.Forms.PreviewWasteDeclarationFormModel
+@{
+    ViewData["Title"] = "PreviewWasteDeclarationForm";
+}
+
+<link rel="stylesheet" href="~/css/view_item.css">
+<div id="styled_item">
+    @{
+        var WasteForm = Model.Form;
+        var declarationNumber = WasteForm.DeclarationNumber;
+        var containerNumber = WasteForm.ContainerNumber;
+        var description = WasteForm.ItemDescription;
+        var location = WasteForm.Location;
+        var accountNumber = WasteForm.AccountNumber;
+
+        var hazardousMaterial = WasteForm.HarzardousMaterial;
+        var length = WasteForm.Length;
+        var width = WasteForm.Width;
+        var height = WasteForm.Height;
+        var volume = (length * width * height) / @Model.GetVolumeConversion();
+
+
+        var generatorId = WasteForm.GeneratorId;
+        var generationDate = WasteForm.GenerationDate;
+        var recievedBy = WasteForm.RecievedById;
+        var recievedDate = WasteForm.RecievedDate;
+        var sealedSource = WasteForm.SealedSource;
+
+        <header>Item Information </header>
+
+        <div class="information-container" id="styled_item">
+            <label>Declaration Number:</label>
+            <p>@declarationNumber</p>
+
+            <label>Container Number:</label>
+            <p>@containerNumber</p>
+
+            <label>Description:</label>
+            <p>@description</p>
+
+            <label>Location:</label>
+            <p>@location</p>
+
+            <label>Account Number:</label>
+            <p>@accountNumber</p>
+
+            <label>Sealed Source:</label>
+            <p>@sealedSource</p>
+
+        </div>
+
+        <header>Physical Properties </header>
+
+        <div class="information-container" id="styled_item">
+
+            <label>Hazardous Material:</label>
+            <p>@hazardousMaterial</p>
+
+            <label>Length:</label>
+            <p>@length in</p>
+            
+
+            <label>Width:</label>
+            <p>@width in</p>
+
+            <label>Height:</label>
+            <p>@height in</p>
+
+            <label>Calculated Volume:</label>
+            <p>@volume.ToString("F") ft&sup3</p>
+
+        </div>
+
+        <header>Creation Details </header>
+
+        <div class="information-container" id="styled_item">
+
+            <label>Generator Name:</label>
+            <p>@Model.FindPersonById(generatorId)</p>
+
+            <label>Generation Date:</label>
+            <p>@generationDate</p>
+
+            <label>Recieved By:</label>
+            <p>@Model.FindPersonById(recievedBy)</p>
+
+            <label>Recieved Date:</label>
+            <p>@recievedDate</p>
+
+        </div>
+
+        <header>Attachments</header>
+        <div class="table-container" id="styled_item">
+
+            <link rel="stylesheet" href="~/css/table.css">
+            <table id="styled_table">
+                <tr>
+                    <th>File Name</th>
+                    <th>Date Submitted</th>
+                    <th>Submitted By</th>
+                </tr>
+
+                @{
+                    var paginatedTable = Model.PaginatedTable;
+
+                    int start = (Model.CurrentPage - 1) * paginatedTable.PageSize;
+                    if (start < 0)
+                    {
+                        start = 0;
+                    }
+                    for (int i = start; i < start + paginatedTable.PageSize; i++)
+                    {
+                        if (i >= Model.AttachmentList.Count)
+                        {
+                            break;
+                        }
+                        var attachment = Model.AttachmentList[i];
+                        <tr>
+                            <td><a href="/Attachment/ViewAttachment?FileId=@attachment.GetAttachmentId()" id="fileName">@attachment.GetAttachmentName()</a></td>
+                            <td>@attachment.GetAttachmentDate()</td>
+                            <td>@attachment.GetAttachmentCreator()</td>
+                        </tr>
+                    }
+                }
+
+            </table>
+
+            <div>
+                <ul class="pagination">
+                    @for (var i = 1; i <= @Model.PaginatedTable.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a href="/Forms/Items/PreviewWasteDeclarationForm?CurrentPage=@i&ItemId=@Model.ItemId" class="page-link">@i</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+
+            <link rel="stylesheet" href="~/css/upload_button.css">
+
+            <form method="post" enctype="multipart/form-data" id="upload_button">
+                <label>Attachment Type:</label>
+                <select id="AttachmentType" name="AttachmentType">
+                    @{
+                        var defaultOption = @Settings.GetStringSetting("Item_Attachment_Type");
+
+                        foreach (int attachmentType in @Model.attachmentTypes.Keys)
+                        {
+                            var val = Model.attachmentTypes[attachmentType];
+                            if (val == defaultOption)
+                            {
+                                <option selected value="@attachmentType">@defaultOption</option>
+                            }
+
+                        }
+                    }
+
+                    @foreach (int attachmentType in @Model.attachmentTypes.Keys)
+                    {
+                       // if (Model.attachmentTypes[attachmentType] == defaultOption) continue;
+                       // <option value="@attachmentType">@Model.attachmentTypes[attachmentType]</option>
+                    }
+                </select>
+                <br />
+                <input type="file" asp-for="File" />
+                <input type="submit" value="Submit Attachment" />
+            </form>
+        </div>
+    }
+
+</div>

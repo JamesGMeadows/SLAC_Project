@@ -1,0 +1,39 @@
+﻿@page
+@model RWM_Database.Pages.Forms.Shipment.CreateShipmentModel
+@{
+}
+
+<link rel="stylesheet" href="~/css/create_form.css">
+
+<b style="font-size: 26px">Shipment Declaration Form</b>
+
+
+
+<form class="form" method="post" id="create_form">
+
+    <header>Shipment Information</header>
+    <div class="information-container" id="styled_form">
+        <label for="ShipmentNumber">Shipment Number:</label>
+        <input type="text" id="ShipmentNumber" name="ShipmentNumber" required maxlength="45">
+
+        <label for="ShipmentTypeId">Shipment Type:</label>
+        <select id="ShipmentTypeId" name="ShipmentTypeId">
+            <option value="-1">None</option>
+            @foreach (int typeId in @Model.shipmentTypeMap.Keys)
+            {
+                var typeName = Model.shipmentTypeMap[typeId];
+                <option value="@typeId">@typeName</option>
+            }
+        </select>
+
+        <label for="DateShipped">Date Shipped:</label>
+        <input type="date" id="DateShipped" name="DateShipped" required>
+
+        <label for="DateRecieved">Date Recieved:</label>
+        <input type="date" id="DateShipped" name="DateRecieved" required>
+
+    </div>
+
+
+    <input type="submit" value="Submit Shipment" asp-page-handler="SubmitButton" />
+</form>
